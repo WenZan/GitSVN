@@ -1,16 +1,29 @@
-git:
-  image: 'gitlab/gitlab-ce:latest'
-  #restart: always
-  hostname: 'gitlab.wzer.com'
-  environment:
-    GITLAB_OMNIBUS_CONFIG: |
-      external_url 'http://192.168.31.209'
-      # Add any other gitlab.rb configuration here, each on its own line
-  ports:
-    - '80:80'
-    - '443:443'
-    - '2020:22'
-  volumes:
-    - '/srv/gitlab/config:/etc/gitlab'
-    - '/srv/gitlab/logs:/var/log/gitlab'
-    - '/srv/gitlab/data:/var/opt/gitlab'
+version: "3"
+services:
+
+  git:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: on-failure
+    #hostname: 'gitlab.wzer.com'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://192.168.31.209'
+        # Add any other gitlab.rb configuration here, each on its own line
+    ports:
+      - '80:80'
+      - '443:443'
+      - '2020:22'
+    volumes:
+      - '/srv/gitlab/config:/etc/gitlab'
+      - '/srv/gitlab/logs:/var/log/gitlab'
+      - '/srv/gitlab/data:/var/opt/gitlab'
+  
+  svn:
+    image: 'garethflowers/svn-server'
+    restart: on-failure
+    ports:
+      - '3690:3690'
+    volumes:
+      - '/root/svn:/var/opt/svn'
+
+
