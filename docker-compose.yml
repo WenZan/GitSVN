@@ -1,10 +1,10 @@
 version: "3"
 services:
 
-  git:
-    image: 'gitlab/gitlab-ce:latest'
+  gitlab:
+    container_name: gitlab
+    image: gitlab/gitlab-ce:latest
     restart: on-failure
-    #hostname: 'gitlab.wzer.com'
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://192.168.31.209'
@@ -17,17 +17,23 @@ services:
       - '/srv/gitlab/config:/etc/gitlab'
       - '/srv/gitlab/logs:/var/log/gitlab'
       - '/srv/gitlab/data:/var/opt/gitlab'
+    depends_on:
+      - openldap
   
   svn:
-    image: 'garethflowers/svn-server'
+    container_name: svn
+    image: garethflowers/svn-server:latest
     restart: on-failure
     ports:
       - '3690:3690'
     volumes:
       - '/root/svn:/var/opt/svn'        #add some existing repos
+    depends_on:
+      - openldap
 
   samba:
-    image: 'dperson/samba'
+    container_name: samba
+    image: dperson/samba:latest
     restart: on-failure
     ports:
       - '139:139'
@@ -35,17 +41,27 @@ services:
     volumes:
       - '/root/samba:/share'
       - '/root/GitSVN/samba:/etc/samba'        #add the configuuation file of samba
+    depends_on:
+      - openldap
 
   openldap:
-    image: 'osixia/openldap'
+    container_name: openldap
+    image: osixia/openldap:latest
+    environment:
+      LDAP_DOMAIN: "wenz.org"
+      LDAP_ADMIN_PASSWORD: "ldap1111"
     restart: on-failure
-    #volumes:
-    # - './ldap:/etc/ldap'
+    domainname: "wenz.org"
+    hostname: "wenz.org"
    
   phpldap:
-    image: 'osixia/phpldapadmin'
+    container_name: phpldap
+    image: osixia/phpldapadmin:latest
     restart: on-failure
     environment:
-        - PHPLDAPADMIN_LDAP_HOSTS=openldap
+        PHPLDAPADMIN_LDAP_HOSTS: "openldap"
+        PHPLDAPADMIN_HTTPS: "false"
     ports:
-      - '6443:443'
+        - '8080:80'
+    depends_on:
+      - openldap
