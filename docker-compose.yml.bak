@@ -35,17 +35,3 @@ services:
     volumes:
       - '/root/samba:/share'
       - '/root/GitSVN/samba:/etc/samba'        #add the configuuation file of samba
-
-  openldap:
-    image: 'osixia/openldap'
-    restart: on-failure
-    #volumes:
-    # - './ldap:/etc/ldap'
-   
-  phpldap:
-    image: 'osixia/phpldapadmin'
-    restart: on-failure
-    environment:
-        - PHPLDAPADMIN_LDAP_HOSTS=openldap
-    ports:
-      - '6443:443'
