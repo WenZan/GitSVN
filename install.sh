@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 # Version 1.0
 # Written by: WenZan.Shaofeng.Peng
 
@@ -11,9 +11,9 @@
 set -euxo pipefail
 
 ### install need root user.
-if[ "whoami" != "root" ]; then
+if [ `whoami` != "root" ]; then
     echo " Need root user."
-    exit 1
+    exit 
 fi
 
 ### install some tools
@@ -21,20 +21,14 @@ yum update
 yum -y install wget \
     net-tools \
     unzip
-### change the source to Domestic source
-cd /etc/yum.repos.d
-mv CentOS-Base.repo CentOS-Base.repo.bak
-wget http://mirrors.163.com/.help/CentOS7-Base-163.repo #163's repo
-yum clean metadata
-yum makecache
 ### install the docker-ce
 yum install -y yum-utils \
     device-mapper-persistent-data \
     lvm2
-#yum-config-manager \
-#    --add-repo \
-#    https://download.docker.com/linux/centos/docker-ce.repo
-yum install docker-ce
+yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+yum install -y docker-ce
 systemctl enable docker #run automatically when boot
 systemctl start docker
 
@@ -56,6 +50,6 @@ wget https://github.com/WenZan/GitSVN/archive/master.zip
 unzip master.zip
 cd GitSVN-master
 # setup the platform
-docker-compose up -d #the platform will run in backgroud
+#docker-compose up -d #the platform will run in backgroud
 
 # That's all.
