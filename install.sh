@@ -16,6 +16,14 @@ if [ $(whoami) != "root" ]; then
     exit 
 fi
 
+### change the repo
+cd /etc/yum.repos.d
+if [ ! -f "CentOS7-Base-163.repo" ]; then
+	mv CentOS-Base.repo CentOS-Base.repo.bak
+	wget http://mirrors.163.com/.help/CentOS7-Base-163.repo
+	yum clean metadata
+	yum makecache
+fi
 ### install some tools
 yum update
 yum -y install wget \
@@ -24,17 +32,15 @@ yum -y install wget \
 ### install the docker-ce
 rpm -qa | grep docker
 if [ "$?" -ne 0 ]; then
-	{
-		yum install -y yum-utils \
-       		device-mapper-persistent-data \
-    		lvm2
-		yum-config-manager \
-    		--add-repo \
-    		https://download.docker.com/linux/centos/docker-ce.repo
-		yum install -y docker-ce
-		systemctl enable docker #run automatically when boot
-		systemctl start docker
-	}
+	yum install -y yum-utils \
+   	device-mapper-persistent-data \
+   		lvm2
+	yum-config-manager \
+   		--add-repo \
+   		https://download.docker.com/linux/centos/docker-ce.repo
+	yum install -y docker-ce
+	systemctl enable docker #run automatically when boot
+	systemctl start docker
 fi
 
 ### using the DaoCloud to speed up the images downloading 
