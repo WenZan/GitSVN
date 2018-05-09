@@ -51,12 +51,12 @@ docker-compose --version
 ### download the docker-compose.yml of the platform from github 
 ### to setup the platform 
 # the compose file is downloaded to /root director by default
-#cd /root
-#wget https://github.com/WenZan/GitSVN/archive/master.zip
-#unzip master.zip 
-#rm -f master.zip
-#cd GitSVN-master
+cd /root
+wget https://github.com/WenZan/GitSVN/archive/master.zip
+unzip master.zip 
+rm -f master.zip
+cd GitSVN-master
 # setup the platform
-#docker-compose up -d #the platform will run in backgroud
+docker-compose up -d #the platform will run in backgroud
 
 # That's all.
