@@ -195,7 +195,7 @@
 ###! **Be careful not to break the indentation in the ldap_servers block. It is
 ###!   in yaml format and the spaces must be retained. Using tabs will not work.**
 
- gitlab_rails['ldap_enabled'] = true 
+ gitlab_rails['ldap_enabled'] = true
 
 ###! **remember to close this block with 'EOS' below**
  gitlab_rails['ldap_servers'] = YAML.load <<-'EOS'
@@ -203,16 +203,23 @@
      label: 'LDAP'
      host: 'openldap'
      port: 389
-     uid: 'cn'
-     bind_dn: 'cn=admin,dc=example,dc=org',
-     password: 'admin'
+     uid: 'uid'
+     bind_dn: 'cn=admin,dc=wenz,dc=org'
+     password: 'ldap1111'
      encryption: 'plain' # "start_tls" or "simple_tls" or "plain"
-     verify_certificates: true
-     active_directory: flase
+#    verify_certificates: true
+     active_directory: true
+     timeout: 10
      allow_username_or_email_login: true
      block_auto_created_users: false
-     base: 'ou=People,dc=example,dc=org'
+     base: 'dc=wenz,dc=org'
      user_filter: ''
+     attributes:
+       username: ['uid','userid','sAMAccountName']
+       email:	 ['mail','email','userPrincipalName']
+       name:     'cn'
+       first_name: 'givenName'
+       last_name: 'sn'
 #     ## EE only
 #     group_base: ''
 #     admin_group: ''

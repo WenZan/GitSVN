@@ -5,16 +5,12 @@ services:
     container_name: gitlab
     image: gitlab/gitlab-ce:latest
     restart: on-failure
-    environment:
-      GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://192.168.31.209'
-        # Add any other gitlab.rb configuration here, each on its own line
     ports:
       - '80:80'
       - '443:443'
       - '2020:22'
     volumes:
-      - '/srv/gitlab/config:/etc/gitlab'
+      - './gitlab:/etc/gitlab'
       - '/srv/gitlab/logs:/var/log/gitlab'
       - '/srv/gitlab/data:/var/opt/gitlab'
     depends_on:
@@ -27,7 +23,7 @@ services:
     ports:
       - '3690:3690'
     volumes:
-      - '/root/svn:/var/opt/svn'        #add some existing repos
+      - './svn:/var/opt/svn'           #add some existing repos
     depends_on:
       - openldap
 
@@ -39,8 +35,8 @@ services:
       - '139:139'
       - '445:445'
     volumes:
-      - '/root/samba:/share'
-      - '/root/GitSVN/samba:/etc/samba'        #add the configuuation file of samba
+      - '/root/wenz/samba:/share'      #create a shared volume that can be managed in host machine
+      - './samba:/etc/samba'           #add the configuuation file of samba
     depends_on:
       - openldap
 
@@ -49,7 +45,7 @@ services:
     image: osixia/openldap:latest
     environment:
       LDAP_DOMAIN: "wenz.org"
-      LDAP_ADMIN_PASSWORD: "ldap1111"
+      LDAP_ADMIN_PASSWORD: "ldap1111"  #set the password of the ldap admin user
     restart: on-failure
     domainname: "wenz.org"
     hostname: "wenz.org"
