@@ -38,8 +38,10 @@ services:
       - '139:139'
       - '445:445'
     volumes:
-      - '/root/wenz/samba:/share'       #create a shared volume that can be managed in host machine
       - './samba:/etc/samba'            #add some configuration files of samba
+      - '/root/wenz/samba/share:/share'       #create a shared volume that can be managed in host machine,only read
+      - '/root/wenz/samba/public:/public'     #this directory can be read&write  
+      - '/root/wenz/samba/personal:/personal' #this directory need authentication      
     depends_on:
       - openldap
 
@@ -50,6 +52,9 @@ services:
       LDAP_DOMAIN: "wenz.org"
       LDAP_ADMIN_PASSWORD: "ldap1111"   #set the password of the ldap admin user
     restart: on-failure
+    volumes:
+      - './ldap/ldap:/var/lib/ldap'
+      - './ldap/slapd.d:/etc/ldap/slapd.d'
     domainname: "wenz.org"
     hostname: "wenz.org"
    
