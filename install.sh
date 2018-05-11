@@ -3,7 +3,7 @@
 # Written by: WenZan.Shaofeng.Peng
 
 # This script is used for installing the platform
-# in a new Community ENTerprise Operating System.
+# in a new Community ENTerprise Operating System7.
 # This script should be run as root user.
 
 ### when error occurred, exit
